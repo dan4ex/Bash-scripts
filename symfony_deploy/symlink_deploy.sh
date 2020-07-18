@@ -2,11 +2,19 @@
 PROJECT_NAME="demo"
 INSTALL_PROJECT="symfony/symfony-demo"
 SYMLINK="latest"
-RELEASE="v1"
+RELEASE=$1
+
+if [[ -z "$RELEASE" ]]
+then
+   echo "Run script with args"
+   echo "Exapmle usage: ./symlink_deploy.sh <your_version>"
+   exit 1
+fi
+
 #Install package
 cd ~/
 sudo apt update
-sudo apt install -y nginx php7.2-cli php7.2-common php7.2-fpm php7.2-cgi php7.2-sqlite php7.2-mbstring php7.2-zip php7.2-xml
+sudo apt install -y wget nginx php7.2-cli php7.2-common php7.2-fpm php7.2-cgi php7.2-sqlite php7.2-mbstring php7.2-zip php7.2-xml
 
 #Install Symphony
 if [[ $(ls -la /usr/bin | grep symfony) ]]
@@ -38,12 +46,13 @@ if [[ $(find /etc/nginx/sites-available/ -type f -name "default") ]]
 then
   sudo rm -f /etc/nginx/sites-available/default
   sudo rm -f /etc/nginx/sites-enabled/default
-elif [[ $(find /etc/nginx/sites-available/ -type f -name $PROJECT_NAME) ]]
+fi
+if [[ $(find /etc/nginx/sites-available/ -type f -name $PROJECT_NAME) ]]
 then
   echo "nginx is already configure"
 else
   sudo tee /etc/nginx/sites-available/$PROJECT_NAME <<EOF
-server {  $PATH
+server {
           listen 80 default_server;
           listen [::]:80 default_server;
 
@@ -77,7 +86,7 @@ then
   echo "Nginx is successfull restarting:)"
 else
   echo "##################################"
-  echo "Nginx restart is fail:( Bad config"
+  echo "Nginx restart is fail:("
   nginx -t
   exit 1
 fi

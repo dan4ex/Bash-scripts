@@ -1,0 +1,8 @@
+dist: bionic
+before_script:
+- ls -ll
+- cd symfony_deploy
+script:
+- ./symlink_deploy.sh v1
+after_success:
+- curl http://localhost
