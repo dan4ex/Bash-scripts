@@ -22,7 +22,7 @@ then
   echo "Symfony is already installer"
 else
    wget https://get.symfony.com/cli/installer -O - | bash
-   sudo mv ~/.symfony/bin/symfony /usr/bin/symfony
+   mv ~/.symfony/bin/symfony /usr/bin/symfony
 fi
 
 #Install Composer
